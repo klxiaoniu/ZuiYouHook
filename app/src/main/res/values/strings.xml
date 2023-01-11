@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ZuiYouHook</string>
+    <string name="xposed_desc">最右去广告 By 快乐小牛 2023.01.11</string>
+</resources>
