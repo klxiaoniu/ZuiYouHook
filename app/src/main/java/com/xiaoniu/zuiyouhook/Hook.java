@@ -14,23 +14,33 @@ public class Hook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (lpparam.packageName.equals("cn.xiaochuankeji.tieba")) {
-            Class a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.klevin.KlevinADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.kuaishou.KuaishouADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.mimo.MimoADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.pangle.PangleADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.qumeng.QuMengADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.tencent.TencentADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xcad.XcADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-            XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xingu.XinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+            hookAdSdk(lpparam);
             hookYoungDialog(lpparam);
         }
     }
-
+    // 去广告
+    private void hookAdSdk(XC_LoadPackage.LoadPackageParam lpparam) {
+        XC_MethodReplacement replaceNull = new XC_MethodReplacement() {
+            @Override
+            //拦截执行
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                return null;
+            }
+        };
+        Class a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.klevin.KlevinADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.kuaishou.KuaishouADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.mimo.MimoADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.pangle.PangleADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.qumeng.QuMengADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.tencent.TencentADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xcad.XcADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xingu.XinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+    }
     // 去除青少年弹窗提示
     private void hookYoungDialog(XC_LoadPackage.LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.tieba.ui.base.SplashActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.tieba.ui.home.page.PageMainActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Activity activity = (Activity) param.thisObject;
@@ -40,11 +50,4 @@ public class Hook implements IXposedHookLoadPackage {
         });
     }
 
-    XC_MethodReplacement replaceNull = new XC_MethodReplacement() {
-        @Override
-        //拦截执行
-        protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-            return null;
-        }
-    };
 }
