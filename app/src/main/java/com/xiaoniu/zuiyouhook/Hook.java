@@ -24,23 +24,25 @@ public class Hook implements IXposedHookLoadPackage {
 
     // 去广告
     private void hookAdSdk(XC_LoadPackage.LoadPackageParam lpparam) {
-        XC_MethodReplacement replaceNull = new XC_MethodReplacement() {
-            @Override
-            //拦截执行
-            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                return null;
-            }
-        };
         Class a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.klevin.KlevinADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.kuaishou.KuaishouADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.mimo.MimoADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.pangle.PangleADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.qumeng.QuMengADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.tencent.TencentADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xcad.XcADProvider", lpparam.classLoader, "init", a, b, replaceNull);
-        XposedHelpers.findAndHookMethod("cn.xiaochuankeji.hermes.xingu.XinguADProvider", lpparam.classLoader, "init", a, b, replaceNull);
+        String[] list = {
+                "cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider",
+                "cn.xiaochuankeji.hermes.klevin.KlevinADProvider",
+                "cn.xiaochuankeji.hermes.kuaishou.KuaishouADProvider",
+                "cn.xiaochuankeji.hermes.mimo.MimoADProvider",
+                "cn.xiaochuankeji.hermes.pangle.PangleADProvider",
+                "cn.xiaochuankeji.hermes.qumeng.QuMengADProvider",
+                "cn.xiaochuankeji.hermes.tencent.TencentADProvider",
+                "cn.xiaochuankeji.hermes.xcad.XcADProvider",
+                "cn.xiaochuankeji.hermes.xingu.XinguADProvider"
+        };
+        for (String s : list) {
+            try {
+                XposedHelpers.findAndHookMethod(s, lpparam.classLoader, "init", a, b, XC_MethodReplacement.returnConstant(null));
+            } catch (XposedHelpers.ClassNotFoundError e) {
+                XposedBridge.log("ZuiYouHook " + s + " failed: " + e.getMessage());
+            }
+        }
     }
 
     // 去除青少年弹窗提示
