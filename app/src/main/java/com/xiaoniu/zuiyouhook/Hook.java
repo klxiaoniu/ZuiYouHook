@@ -34,7 +34,9 @@ public class Hook implements IXposedHookLoadPackage {
                 "cn.xiaochuankeji.hermes.qumeng.QuMengADProvider",
                 "cn.xiaochuankeji.hermes.tencent.TencentADProvider",
                 "cn.xiaochuankeji.hermes.xcad.XcADProvider",
-                "cn.xiaochuankeji.hermes.xingu.XinguADProvider"
+                "cn.xiaochuankeji.hermes.xingu.XinguADProvider",
+                "cn.xiaochuankeji.hermes.gromore.GroMoreADProvider",
+                "cn.xiaochuankeji.hermes.tanx.TanxADProvider"
         };
         for (String s : list) {
             try {
