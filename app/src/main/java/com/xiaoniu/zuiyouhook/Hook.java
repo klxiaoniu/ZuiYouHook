@@ -24,7 +24,7 @@ public class Hook implements IXposedHookLoadPackage {
 
     // 去广告
     private void hookAdSdk(XC_LoadPackage.LoadPackageParam lpparam) {
-        Class a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
+        Class<?> a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
         String[] list = {
                 "cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider",
                 "cn.xiaochuankeji.hermes.klevin.KlevinADProvider",
@@ -36,7 +36,8 @@ public class Hook implements IXposedHookLoadPackage {
                 "cn.xiaochuankeji.hermes.xcad.XcADProvider",
                 "cn.xiaochuankeji.hermes.xingu.XinguADProvider",
                 "cn.xiaochuankeji.hermes.gromore.GroMoreADProvider",
-                "cn.xiaochuankeji.hermes.tanx.TanxADProvider"
+                "cn.xiaochuankeji.hermes.tanx.TanxADProvider",
+                "cn.xiaochuankeji.hermes.baidu.BaiduADProvider"
         };
         for (String s : list) {
             try {
@@ -60,7 +61,7 @@ public class Hook implements IXposedHookLoadPackage {
     }
 
     private void hookVideo(XC_LoadPackage.LoadPackageParam lpparam) {
-        Class clazz = XposedHelpers.findClass("cn.xiaochuankeji.tieba.background.data.ServerVideo", lpparam.classLoader);
+        Class<?> clazz = XposedHelpers.findClass("cn.xiaochuankeji.tieba.background.data.ServerVideo", lpparam.classLoader);
         XposedBridge.hookAllConstructors(clazz, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {

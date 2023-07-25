@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ZuiYouHook</string>
-    <string name="xposed_desc">最右去广告 By 快乐小牛 2023.01.11</string>
+    <string name="xposed_desc">最右去广告/视频下载水印/青少年弹窗模块 By 快乐小牛</string>
 </resources>

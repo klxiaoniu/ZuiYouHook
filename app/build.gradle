@@ -16,14 +16,14 @@ android {
         }
     }
     namespace 'com.xiaoniu.zuiyouhook'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.xiaoniu.zuiyouhook"
         minSdk 16
-        targetSdk 33
-        versionCode 7
-        versionName "1.4.2"
+        targetSdk 34
+        versionCode 8
+        versionName "1.4.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
