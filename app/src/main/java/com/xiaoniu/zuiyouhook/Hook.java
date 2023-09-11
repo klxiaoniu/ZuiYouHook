@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import java.lang.reflect.Method;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -14,7 +16,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class Hook implements IXposedHookLoadPackage {
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if (lpparam.packageName.equals("cn.xiaochuankeji.tieba")) {
             hookAdSdk(lpparam);
             hookYoungDialog(lpparam);
@@ -24,26 +26,11 @@ public class Hook implements IXposedHookLoadPackage {
 
     // 去广告
     private void hookAdSdk(XC_LoadPackage.LoadPackageParam lpparam) {
-        Class<?> a = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.provider.ADSDKInitParam", lpparam.classLoader), b = XposedHelpers.findClass("kotlin.coroutines.Continuation", lpparam.classLoader);
-        String[] list = {
-                "cn.xiaochuankeji.hermes.bjxingu.BJXinguADProvider",
-                "cn.xiaochuankeji.hermes.klevin.KlevinADProvider",
-                "cn.xiaochuankeji.hermes.kuaishou.KuaishouADProvider",
-                "cn.xiaochuankeji.hermes.mimo.MimoADProvider",
-                "cn.xiaochuankeji.hermes.pangle.PangleADProvider",
-                "cn.xiaochuankeji.hermes.qumeng.QuMengADProvider",
-                "cn.xiaochuankeji.hermes.tencent.TencentADProvider",
-                "cn.xiaochuankeji.hermes.xcad.XcADProvider",
-                "cn.xiaochuankeji.hermes.xingu.XinguADProvider",
-                "cn.xiaochuankeji.hermes.gromore.GroMoreADProvider",
-                "cn.xiaochuankeji.hermes.tanx.TanxADProvider",
-                "cn.xiaochuankeji.hermes.baidu.BaiduADProvider"
-        };
-        for (String s : list) {
-            try {
-                XposedHelpers.findAndHookMethod(s, lpparam.classLoader, "init", a, b, XC_MethodReplacement.returnConstant(null));
-            } catch (XposedHelpers.ClassNotFoundError e) {
-                XposedBridge.log("ZuiYouHook " + s + " failed: " + e.getMessage());
+        Method[] ms = XposedHelpers.findClass("cn.xiaochuankeji.hermes.HermesSDK", lpparam.classLoader).getDeclaredMethods();
+        for (Method m : ms) {
+            if (m.getName().equals("install")) {
+                XposedBridge.hookMethod(m, XC_MethodReplacement.returnConstant(null));
+                break;
             }
         }
     }
