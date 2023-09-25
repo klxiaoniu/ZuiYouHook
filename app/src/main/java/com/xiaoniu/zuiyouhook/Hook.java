@@ -26,9 +26,9 @@ public class Hook implements IXposedHookLoadPackage {
 
     // 去广告
     private void hookAdSdk(XC_LoadPackage.LoadPackageParam lpparam) {
-        Method[] ms = XposedHelpers.findClass("cn.xiaochuankeji.hermes.HermesSDK", lpparam.classLoader).getDeclaredMethods();
+        Method[] ms = XposedHelpers.findClass("cn.xiaochuankeji.hermes.core.Hermes", lpparam.classLoader).getDeclaredMethods();
         for (Method m : ms) {
-            if (m.getName().equals("install")) {
+            if (m.getName().equals("init")) {
                 XposedBridge.hookMethod(m, XC_MethodReplacement.returnConstant(null));
                 break;
             }
@@ -39,7 +39,7 @@ public class Hook implements IXposedHookLoadPackage {
     private void hookYoungDialog(XC_LoadPackage.LoadPackageParam lpparam) {
         XposedHelpers.findAndHookMethod("cn.xiaochuankeji.tieba.ui.home.page.PageMainActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            protected void beforeHookedMethod(MethodHookParam param) {
                 Activity activity = (Activity) param.thisObject;
                 SharedPreferences sp = activity.getSharedPreferences("common", Context.MODE_PRIVATE);
                 sp.edit().putLong("skey_show_young_mode_guide_time", System.currentTimeMillis()).apply();
